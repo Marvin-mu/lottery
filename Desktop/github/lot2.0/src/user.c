@@ -132,20 +132,22 @@ int cancellate_user(user_link* user_head,u_l_link* u_l_head,char* name){//注销
 	}
 	system("clear");
 	user_link* res = find_user(user_head,name);
-	u_l_link* ret = u_l_head;
+	u_l_link* ret = u_l_head->next;
+	u_l_link* p = u_l_head->next;
 	if (res != NULL)//执行删除
 	{
 		res->prev->next = res->next;//从用户链表删除
 		res->next->prev = res->prev;
 		free(res);
 		while(ret != u_l_head){
+			p = ret;
 			ret = ret->next;
-			if (strcmp(name,ret->user_lottery.name)==0)
+			if (strcmp(name,ret->prev->user_lottery.name)==0)
 			{
-				ret->prev->next = ret->next;//从用户彩票链表删除
-				ret->next->prev = ret->prev;
+				ret->prev->prev->next = ret->prev->next;//从用户彩票链表删除
+				ret->prev->next->prev = ret->prev->prev;
+				free(p);
 			}
-			free(ret->next);
 		}
 		printf("\n\t\t注销成功!\n");
 		sleep(1);
